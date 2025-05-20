@@ -214,7 +214,7 @@ class Updater:
         if version >= Version("6.2.0") and version < Version("6.5.0"):
             patch_script("bin", "qt-cmake-private")
             patch_script("bin", "qt-cmake-standalone-test")
-        else if version >= Version("6.5.0"):
+        elif version >= Version("6.5.0"):
             patch_script("libexec", "qt-cmake-private")
             patch_script("libexec", "qt-cmake-standalone-test")
 
