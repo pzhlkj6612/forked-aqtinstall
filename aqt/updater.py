@@ -188,18 +188,34 @@ class Updater:
         sep = "\\" if os_name.startswith("windows") else "/"
         patched = sep.join([base_dir, version_dir, desktop_arch_dir, "bin"])
 
-        def patch_script(script_name):
-            script_path = self.prefix / "bin" / (script_name + ".bat" if os_name.startswith("windows") else script_name)
+        def patch_script(script_dir, script_name):
+            script_path = self.prefix / script_dir / (script_name + ".bat" if os_name.startswith("windows") else script_name)
             self.logger.info(f"Patching {script_path}")
             for unpatched in unpatched_paths():
                 self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
+        def patch_bin_script(script_name):
+            patch_script("bin", script_name)
+        def patch_libexec_script(script_name):
+            patch_script("libexec", script_name)
 
-        patch_script("qmake")
+        # common
+        patch_bin_script("qmake")
         if version >= Version("6.2.2"):
-            patch_script("qtpaths")
+            patch_bin_script("qtpaths")
         if version >= Version("6.5.0"):
-            patch_script("qmake6")
-            patch_script("qtpaths6")
+            patch_bin_script("qmake6")
+            patch_bin_script("qtpaths6")
+
+        # wasm
+        if version >= Version("6.0.0"):
+            patch_bin_script("qt-cmake")
+            patch_bin_script("qt-configure-module")
+            patch_libexec_script("qt-cmake-private")
+            patch_libexec_script("qt-cmake-standalone-test")
+            patch_libexec_script("qt-internal-configure-examples")
+            patch_libexec_script("qt-internal-configure-tests")
+        if version >= Version("6.6.0"):
+            patch_bin_script("qt-cmake-create")
 
     def patch_qtcore(self, target):
         """patch to QtCore"""
