@@ -193,29 +193,25 @@ class Updater:
             self.logger.info(f"Patching {script_path}")
             for unpatched in unpatched_paths():
                 self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
-        def patch_bin_script(script_name):
-            patch_script("bin", script_name)
-        def patch_libexec_script(script_name):
-            patch_script("libexec", script_name)
 
         # common
-        patch_bin_script("qmake")
+        patch_script("bin", "qmake")
         if version >= Version("6.2.2"):
-            patch_bin_script("qtpaths")
+            patch_script("bin", "qtpaths")
         if version >= Version("6.5.0"):
-            patch_bin_script("qmake6")
-            patch_bin_script("qtpaths6")
+            patch_script("bin", "qmake6")
+            patch_script("bin", "qtpaths6")
 
-        # wasm
-        if version >= Version("6.0.0"):
-            patch_bin_script("qt-cmake")
-            patch_bin_script("qt-configure-module")
-            patch_libexec_script("qt-cmake-private")
-            patch_libexec_script("qt-cmake-standalone-test")
-            patch_libexec_script("qt-internal-configure-examples")
-            patch_libexec_script("qt-internal-configure-tests")
+        # wasm, since Qt 6.2
+        if version >= Version("6.2.0"):
+            patch_script("bin", "qt-cmake")
+            patch_script("bin", "qt-configure-module")
+            patch_script("libexec", "qt-cmake-private")
+            patch_script("libexec", "qt-cmake-standalone-test")
+            patch_script("libexec", "qt-internal-configure-examples")
+            patch_script("libexec", "qt-internal-configure-tests")
         if version >= Version("6.6.0"):
-            patch_bin_script("qt-cmake-create")
+            patch_script("bin", "qt-cmake-create")
 
     def patch_qtcore(self, target):
         """patch to QtCore"""
