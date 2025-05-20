@@ -209,7 +209,7 @@ class Updater:
             patch_script("libexec", "qt-internal-configure-tests")
         if version >= Version("6.6.0"):
             patch_script("bin", "qt-cmake-create")
-        if version >= Version("6.7.0"):
+        if version >= Version("6.8.0"):
             patch_script("libexec", "qt-internal-configure-examples")
         if version >= Version("6.2.0") and version < Version("6.5.0"):
             patch_script("bin", "qt-cmake-private")
