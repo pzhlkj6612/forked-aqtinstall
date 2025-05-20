@@ -206,12 +206,17 @@ class Updater:
         if version >= Version("6.2.0"):
             patch_script("bin", "qt-cmake")
             patch_script("bin", "qt-configure-module")
-            patch_script("libexec", "qt-cmake-private")
-            patch_script("libexec", "qt-cmake-standalone-test")
-            patch_script("libexec", "qt-internal-configure-examples")
             patch_script("libexec", "qt-internal-configure-tests")
         if version >= Version("6.6.0"):
             patch_script("bin", "qt-cmake-create")
+        if version >= Version("6.7.0"):
+            patch_script("libexec", "qt-internal-configure-examples")
+        if version >= Version("6.2.0") and version < Version("6.5.0"):
+            patch_script("bin", "qt-cmake-private")
+            patch_script("bin", "qt-cmake-standalone-test")
+        else if version >= Version("6.5.0"):
+            patch_script("libexec", "qt-cmake-private")
+            patch_script("libexec", "qt-cmake-standalone-test")
 
     def patch_qtcore(self, target):
         """patch to QtCore"""
