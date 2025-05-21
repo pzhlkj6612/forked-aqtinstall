@@ -191,7 +191,7 @@ class Updater:
         def patch_script(script_dir_name, script_glob):
             script_dir = self.prefix / script_dir_name
 
-            script_names = list(script_dir.glob(script_glob))
+            script_names = sorted(list(script_dir.glob(script_glob)))
             if len(script_names) == 0:
                 self.logger.debug(f"Skipped patching scripts {script_dir / script_glob}")
                 return
