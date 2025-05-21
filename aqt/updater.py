@@ -211,7 +211,7 @@ class Updater:
             patch_script("bin", "qmake6")
             patch_script("bin", "qtpaths6")
 
-        # for wasm_singlethread and wasm_multithread, since Qt 6.5.0; the old wasm_32 is safe
+        # for wasm_singlethread and wasm_multithread, since Qt 6.5.0
         if version >= Version("6.5.0"):
             patch_script("bin", "qt-cmake")
             patch_script("bin", "qt-cmake-private")
