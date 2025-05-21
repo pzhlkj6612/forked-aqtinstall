@@ -188,11 +188,20 @@ class Updater:
         sep = "\\" if os_name.startswith("windows") else "/"
         patched = sep.join([base_dir, version_dir, desktop_arch_dir, "bin"])
 
-        def patch_script(script_dir, script_name):
-            script_path = self.prefix / script_dir / (script_name + ".bat" if os_name.startswith("windows") else script_name)
-            self.logger.info(f"Patching {script_path}")
-            for unpatched in unpatched_paths():
-                self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
+        def patch_script(script_dir_name, script_name):
+            script_dir_path = self.prefix / script_dir_name
+            script_glob_name = script_name + ".bat" if os_name.startswith("windows") else script_name
+
+            script_names = script_dir_path.glob(script_glob_name)
+            if len(script_names) == 0:
+                self.logger.info(f"Skipped patching scripts like {script_dir_path / script_glob_name}")
+                return
+
+            for script_name in script_names:
+                script_path = script_dir_path / script_name
+                self.logger.info(f"Patching {script_path}")
+                for unpatched in unpatched_paths():
+                    self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
 
         # common
         patch_script("bin", "qmake")
@@ -202,13 +211,16 @@ class Updater:
             patch_script("bin", "qmake6")
             patch_script("bin", "qtpaths6")
 
-        # wasm, since Qt 6.2
+        # for wasm_singlethread and wasm_multithread, since Qt 6.5.0
         if version >= Version("6.5.0"):
             patch_script("bin", "qt-cmake")
+            patch_script("bin", "qt-cmake-private")
             patch_script("bin", "qt-configure-module")
             patch_script("libexec", "qt-internal-configure-tests")
             patch_script("libexec", "qt-cmake-private")
             patch_script("libexec", "qt-cmake-standalone-test")
+            patch_script("libexec", "*.sh")
+            patch_script("libexec", "*.py")
         if version >= Version("6.6.0"):
             patch_script("bin", "qt-cmake-create")
         if version >= Version("6.8.0"):
