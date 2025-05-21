@@ -203,11 +203,9 @@ class Updater:
                     self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
 
         patch_script("bin", "qmake")
-        patch_script("libexec", "*.py")
-        if os_name.startswith("windows"):
-            patch_script("bin", "*.bat")
-        else:
-            patch_script("bin", "*.sh")
+        for dir_name in ["bin", "libexec"]:
+            patch_script(dir_name, "*.py")
+            patch_script(dir_name, "*.bat" if os_name.startswith("windows") else "*.sh")
         if version >= Version("6.2.2"):
             patch_script("bin", "qtpaths")
         if version >= Version("6.5.0"):
