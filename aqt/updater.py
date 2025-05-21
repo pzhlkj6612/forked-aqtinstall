@@ -190,11 +190,10 @@ class Updater:
 
         def patch_script(script_dir_name, script_glob):
             script_dir = self.prefix / script_dir_name
-            script_glob = script_glob + ".bat" if os_name.startswith("windows") else script_glob
 
             script_names = list(script_dir.glob(script_glob))
             if len(script_names) == 0:
-                self.logger.info(f"Skipped patching scripts {script_dir / script_glob}")
+                self.logger.debug(f"Skipped patching scripts {script_dir / script_glob}")
                 return
 
             for script_name in script_names:
@@ -203,24 +202,23 @@ class Updater:
                 for unpatched in unpatched_paths():
                     self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
 
-        # common
         patch_script("bin", "qmake")
+        patch_script("libexec", "*.py")
+        if os_name.startswith("windows"):
+            patch_script("bin", "*.bat")
+        else:
+            patch_script("libexec", "*.sh")
         if version >= Version("6.2.2"):
             patch_script("bin", "qtpaths")
         if version >= Version("6.5.0"):
             patch_script("bin", "qmake6")
             patch_script("bin", "qtpaths6")
-
-        # for wasm_singlethread and wasm_multithread, since Qt 6.5.0
-        if version >= Version("6.5.0"):
             patch_script("bin", "qt-cmake")
             patch_script("bin", "qt-cmake-private")
             patch_script("bin", "qt-configure-module")
             patch_script("libexec", "qt-cmake-private")
             patch_script("libexec", "qt-cmake-standalone-test")
             patch_script("libexec", "qt-internal-configure-tests")
-            patch_script("libexec", "*.py")
-            patch_script("libexec", "*.sh")
         if version >= Version("6.6.0"):
             patch_script("bin", "qt-cmake-create")
         if version >= Version("6.8.0"):
