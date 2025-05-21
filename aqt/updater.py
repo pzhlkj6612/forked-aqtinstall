@@ -188,17 +188,17 @@ class Updater:
         sep = "\\" if os_name.startswith("windows") else "/"
         patched = sep.join([base_dir, version_dir, desktop_arch_dir, "bin"])
 
-        def patch_script(script_dir_name, script_name):
-            script_dir_path = self.prefix / script_dir_name
-            script_glob_name = script_name + ".bat" if os_name.startswith("windows") else script_name
+        def patch_script(script_dir_name, script_glob):
+            script_dir = self.prefix / script_dir_name
+            script_glob = script_glob + ".bat" if os_name.startswith("windows") else script_glob
 
-            script_names = list(script_dir_path.glob(script_glob_name))
+            script_names = list(script_dir.glob(script_glob))
             if len(script_names) == 0:
-                self.logger.info(f"Skipped patching scripts {script_dir_path / script_glob_name}")
+                self.logger.info(f"Skipped patching scripts {script_dir / script_glob}")
                 return
 
             for script_name in script_names:
-                script_path = script_dir_path / script_name
+                script_path = script_dir / script_name
                 self.logger.info(f"Patching {script_path}")
                 for unpatched in unpatched_paths():
                     self._patch_textfile(script_path, f"{unpatched}bin", patched, is_executable=True)
