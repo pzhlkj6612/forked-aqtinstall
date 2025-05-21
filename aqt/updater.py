@@ -192,8 +192,8 @@ class Updater:
             script_dir_path = self.prefix / script_dir_name
             script_glob_name = script_name + ".bat" if os_name.startswith("windows") else script_name
 
-            script_names = script_dir_path.glob(script_glob_name)
-            if len(list(script_names)) == 0:
+            script_names = list(script_dir_path.glob(script_glob_name))
+            if len(script_names) == 0:
                 self.logger.info(f"Skipped patching scripts like {script_dir_path / script_glob_name}")
                 return
 
