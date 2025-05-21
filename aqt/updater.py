@@ -194,7 +194,7 @@ class Updater:
 
             script_names = list(script_dir_path.glob(script_glob_name))
             if len(script_names) == 0:
-                self.logger.info(f"Skipped patching scripts like {script_dir_path / script_glob_name}")
+                self.logger.info(f"Skipped patching scripts {script_dir_path / script_glob_name}")
                 return
 
             for script_name in script_names:
