@@ -207,7 +207,7 @@ class Updater:
         if os_name.startswith("windows"):
             patch_script("bin", "*.bat")
         else:
-            patch_script("libexec", "*.sh")
+            patch_script("bin", "*.sh")
         if version >= Version("6.2.2"):
             patch_script("bin", "qtpaths")
         if version >= Version("6.5.0"):
